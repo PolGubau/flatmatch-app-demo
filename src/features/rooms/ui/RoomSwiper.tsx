@@ -12,13 +12,14 @@ import { Swiper, type SwiperCardRefType } from 'rn-swiper-list';
 
 import { TouchableOpacity } from 'react-native';
 import { Room } from '~/src/domain/rooms/Room';
-import { roomsMock } from '../__mocks__/rooms.mock';
 
 
 
 const ICON_SIZE = 24;
-
-export const RoomSwiper = () => {
+type Props = {
+  rooms: Room[];
+};
+export const RoomSwiper = ({ rooms }: Props) => {
   const ref = useRef<SwiperCardRefType>(null);
 
   const renderCard = useCallback((image: Room) => {
@@ -88,7 +89,7 @@ export const RoomSwiper = () => {
         <Swiper
           ref={ref}
           cardStyle={styles.cardStyle}
-          data={roomsMock}
+          data={rooms}
           renderCard={renderCard}
           onIndexChange={(index) => {
             console.log('Current Active index', index);
