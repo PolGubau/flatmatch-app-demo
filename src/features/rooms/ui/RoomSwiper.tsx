@@ -2,6 +2,7 @@
 import { AntDesign } from '@expo/vector-icons';
 import React, { useCallback, useRef } from 'react';
 import {
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacityProps,
@@ -10,6 +11,7 @@ import {
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Swiper, type SwiperCardRefType } from 'rn-swiper-list';
 
+import { Link } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 import { Room } from '~/src/domain/rooms/Room';
 
@@ -21,16 +23,35 @@ type Props = {
 };
 export const RoomSwiper = ({ rooms }: Props) => {
   const ref = useRef<SwiperCardRefType>(null);
-
-  const renderCard = useCallback((image: Room) => {
+  const renderCard = useCallback((room: Room) => {
+    const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
     return (
-      <View style={styles.renderCardContainer}>
+      <View style={styles.renderCardContainer} className='bg-neutral-300'>
         {/* <Image
           source={image}
           style={styles.renderCardImage}
           resizeMode="cover"
         /> */}
-        <Text>{image.name}</Text>
+        <Text>{room.name}</Text>
+
+        <Text>{currentImageIndex}</Text>
+        <Pressable
+          onPress={() => {
+            setCurrentImageIndex((prev) => prev + 1);
+          }}
+        >
+          <Text>Next</Text>
+        </Pressable>
+
+
+        <Link
+          href={{
+            pathname: '/room/[id]',
+            params: { id: room.id }
+          }}
+        >
+          View Room
+        </Link>
       </View>
     );
   }, []);
@@ -88,43 +109,47 @@ export const RoomSwiper = ({ rooms }: Props) => {
       <View style={styles.subContainer}>
         <Swiper
           ref={ref}
+
+
+          prerenderItems={2}
+          keyExtractor={(item: Room) => item.id.toString()}
           cardStyle={styles.cardStyle}
           data={rooms}
           renderCard={renderCard}
-          onIndexChange={(index) => {
-            console.log('Current Active index', index);
-          }}
-          onSwipeRight={(cardIndex) => {
-            console.log('cardIndex', cardIndex);
-          }}
-          onPress={() => {
-            console.log('onPress');
-          }}
-          onSwipedAll={() => {
-            console.log('onSwipedAll');
-          }}
-          onSwipeLeft={(cardIndex) => {
-            console.log('onSwipeLeft', cardIndex);
-          }}
-          onSwipeTop={(cardIndex) => {
-            console.log('onSwipeTop', cardIndex);
-          }}
-          onSwipeBottom={(cardIndex) => {
-            console.log('onSwipeBottom', cardIndex);
-          }}
+          // onIndexChange={(index) => {
+          //   console.log('Current Active index', index);
+          // }}
+          // onSwipeRight={(cardIndex) => {
+          //   console.log('cardIndex', cardIndex);
+          // }}
+          // onPress={() => {
+          //   console.log('onPress');
+          // }}
+          // onSwipedAll={() => {
+          //   console.log('onSwipedAll');
+          // }}
+          // onSwipeLeft={(cardIndex) => {
+          //   console.log('onSwipeLeft', cardIndex);
+          // }}
+          // onSwipeTop={(cardIndex) => {
+          //   console.log('onSwipeTop', cardIndex);
+          // }}
+          // onSwipeBottom={(cardIndex) => {
+          //   console.log('onSwipeBottom', cardIndex);
+          // }}
           OverlayLabelRight={OverlayLabelRight}
           OverlayLabelLeft={OverlayLabelLeft}
           OverlayLabelTop={OverlayLabelTop}
           OverlayLabelBottom={OverlayLabelBottom}
-          onSwipeActive={() => {
-            console.log('onSwipeActive');
-          }}
-          onSwipeStart={() => {
-            console.log('onSwipeStart');
-          }}
-          onSwipeEnd={() => {
-            console.log('onSwipeEnd');
-          }}
+        // onSwipeActive={() => {
+        //   console.log('onSwipeActive');
+        // }}
+        // onSwipeStart={() => {
+        //   console.log('onSwipeStart');
+        // }}
+        // onSwipeEnd={() => {
+        //   console.log('onSwipeEnd');
+        // }}
         />
       </View>
 
@@ -209,7 +234,7 @@ const styles = StyleSheet.create({
   },
   cardStyle: {
     width: '95%',
-    height: '75%',
+    height: '80%',
     borderRadius: 15,
     marginVertical: 20,
   },
